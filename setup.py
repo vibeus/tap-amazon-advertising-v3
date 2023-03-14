@@ -18,8 +18,7 @@ setup(
         "requests",
         "singer-python",
         "python-dateutil",
-        "requests_oauthlib",
-        "zlib"
+        "requests_oauthlib"
     ],
     entry_points="""
     [console_scripts]
