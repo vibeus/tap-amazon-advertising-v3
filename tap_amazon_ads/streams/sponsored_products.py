@@ -15,7 +15,7 @@ class SponsoredProductsCampaigns(Base):
 
     @property
     def key_properties(self):
-        return ["profileId", "countryCode", "campaignId"]
+        return ["profileId", "campaignId"]
 
     @property
     def api_path(self):
@@ -41,7 +41,7 @@ class SponsoredProductsAdGroups(Base):
 
     @property
     def key_properties(self):
-        return ["profileId", "countryCode", "campaignId", "adGroupId"]
+        return ["profileId", "campaignId", "adGroupId"]
 
     @property
     def api_path(self):
@@ -67,7 +67,7 @@ class SponsoredProductsProductAds(Base):
 
     @property
     def key_properties(self):
-        return ["profileId", "countryCode", "campaignId", "adGroupId"]
+        return ["profileId", "campaignId", "adGroupId"]
 
     @property
     def api_path(self):

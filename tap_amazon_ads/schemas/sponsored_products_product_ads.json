@@ -13,6 +13,9 @@
     "campaignId": {
       "type": ["null", "string"]
     },
+    "adGroupId": {
+      "type": ["null", "string"]
+    },
     "portfolioId": {
         "type": ["null", "string"]
     },

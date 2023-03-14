@@ -1,6 +1,7 @@
 from .sponsored_products import \
                 SponsoredProductsCampaigns, \
-                SponsoredProductsAdGroups
+                SponsoredProductsAdGroups, \
+                SponsoredProductsProductAds
 from .sponsored_products_report import \
                 SponsoredProductsReportCampaigns, \
                 SponsoredProductsReportAdGroups, \
@@ -14,6 +15,8 @@ def create_stream(stream_id):
         return SponsoredProductsCampaigns()
     if stream_id == "sponsored_products_ad_groups":
         return SponsoredProductsAdGroups()
+    if stream_id == "sponsored_products_product_ads":
+        return SponsoredProductsProductAds()
     if stream_id == "sponsored_products_report_v3_campaigns":
         return SponsoredProductsReportCampaigns()
     if stream_id == "sponsored_products_report_v3_ad_groups":

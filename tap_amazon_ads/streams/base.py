@@ -111,7 +111,7 @@ class Base:
         LOGGER.info(f"start syncing {self.name} for {profile['country_code']}")
         next_token = None
         counter = 0
-        while True:
+        while True and counter < MAX_TRIES:
             try:
                 if not next_token:
                     resp = requests.post(url=f"{api_base}{self.api_path}", headers=headers)
@@ -210,8 +210,8 @@ class ReportBase(Base):
         end = min(start + timedelta(days=30), yesterday)
 
         max_rep_key = start
-
-        while start < yesterday:
+        counter = 0
+        while start < yesterday and counter < MAX_TRIES:
             try:
                 LOGGER.info(f"start snycing {self.name} from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']}")
                 # Create a report
@@ -219,16 +219,18 @@ class ReportBase(Base):
                                         json={"startDate": start.date().isoformat(), "endDate": end.date().isoformat(),
                                             "configuration": self.get_configuration()})
                 if resp.status_code != 200:
-                    LOGGER.warning(f"{resp.text}")
+                    LOGGER.warning(f"report_create request error: {resp.text}")
+                    counter += 1
                     continue
 
                 time.sleep(15) # wait 15 second for report processing
 
+                counter = 0
                 doc = None
                 for i in range(MAX_TRIES):
                     report_info = requests.get(url='{}/reporting/reports/{}'.format(api_base, resp.json()['reportId']), headers=headers)
                     if report_info.status_code != 200:
-                        LOGGER.warning(f"report from {start.isoformat()} to {end.isoformat()} for {profile['country_code']} is not created successfully...")
+                        LOGGER.warning(f"report_info request error: {report_info.text}")
                         continue
                     if report_info.json()["status"] == "COMPLETED":
                         doc = self.get_report_document(report_info.json()["url"])

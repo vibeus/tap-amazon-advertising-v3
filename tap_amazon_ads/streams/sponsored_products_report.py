@@ -16,7 +16,7 @@ class SponsoredProductsReportCampaigns(ReportBase):
 
     @property
     def key_properties(self):
-        return ["profileId", "countryCode", "campaignId", "placementClassification", "date"]
+        return ["profileId", "campaignId", "placementClassification", "date"]
 
     @property
     def metric_types(self):
@@ -53,7 +53,7 @@ class SponsoredProductsReportAdGroups(ReportBase):
 
     @property
     def key_properties(self):
-        return ["profileId", "countryCode", "campaignId", "adGroupId", "date"]
+        return ["profileId", "campaignId", "adGroupId", "date"]
 
     @property
     def metric_types(self):
@@ -87,7 +87,7 @@ class SponsoredProductsReportSearchTerm(ReportBase):
 
     @property
     def key_properties(self):
-        return ["profileId", "countryCode", "campaignId", "adGroupId", "keywordId", "targeting", "date"]
+        return ["profileId", "campaignId", "adGroupId", "keywordId", "targeting", "date"]
 
     @property
     def metric_types(self):
@@ -100,7 +100,7 @@ class SponsoredProductsReportSearchTerm(ReportBase):
     def get_configuration(self):
         return {
             "adProduct": "SPONSORED_PRODUCTS",
-            "groupBy": ["asin"],
+            "groupBy": ["searchTerm"],
             "columns": [
                 "date",
                 "campaignName",
@@ -119,7 +119,7 @@ class SponsoredProductsReportSearchTerm(ReportBase):
                 "matchType",
                 "targeting",]
                  + self.gen_metrics_names(self.metric_types),
-            "reportTypeId": "spPurchasedProduct",
+            "reportTypeId": "spSearchTerm",
             "timeUnit": "DAILY",
             "format": "GZIP_JSON"
         }
@@ -132,7 +132,7 @@ class SponsoredProductsReportPurchasedProduct(ReportBase):
 
     @property
     def key_properties(self):
-        return ["profileId", "countryCode", "campaignId", "adGroupId", "portfolioId", "keywordId", "date"]
+        return ["profileId", "campaignId", "adGroupId", "portfolioId", "keywordId", "date"]
 
     @property
     def metric_types(self):
@@ -177,7 +177,7 @@ class SponsoredProductsReportTargeting(ReportBase):
 
     @property
     def key_properties(self):
-        return ["profileId", "countryCode", "campaignId", "adGroupId", "portfolioId", "keywordId", "keywordType", "date"]
+        return ["profileId", "campaignId", "adGroupId", "portfolioId", "keywordId", "keywordType", "date"]
 
     @property
     def metric_types(self):

@@ -1,10 +1,10 @@
-# tap-amazon-ads
+# tap-amazon-ads (Version 3)
 
 This is a [Singer][1] tap that produces JSON-formatted data following the [Singer spec][2].
 
 This tap:
 
-- Pulls raw data from [Amazon ads API][3]
+- Pulls raw data from [Amazon Ads API][3] Version 3
 - Extracts the following resources:
     - SponsoredProductsCampaigns
     - SponsoredProductsAdGroups
