@@ -17,7 +17,9 @@ setup(
     install_requires=[
         "requests",
         "singer-python",
-        "python-dateutil"
+        "python-dateutil",
+        "requests_oauthlib",
+        "zlib"
     ],
     entry_points="""
     [console_scripts]
