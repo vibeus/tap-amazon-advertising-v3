@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "profileId": {
+        "type": "integer"
+    },
+    "countryCode": {
+        "type": "string"
+    },
+    "name": {
+        "type": ["null", "string"]
+    },
+    "campaignId": {
+      "type": "string"
+    },
+    "portfolioId": {
+        "type": ["null", "string"]
+    },
+    "defaultBid": {
+      "type": ["null", "number"]
+    },
+    "state": {
+      "type": ["null", "string"]
+    }
+  }
+}

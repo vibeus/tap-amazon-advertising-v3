@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "properties": {
+      "profileId": {
+          "type": "integer"
+      },
+      "countryCode": {
+          "type": "string"
+      },
+      "date": {
+          "type": "string",
+          "format": "date-time"
+      },
+      "campaignName": {
+          "type": ["null", "string"]
+      },
+      "campaignId": {
+          "type": ["null", "string"]
+      },
+      "campaignStatus": {
+          "type": ["null", "string"]
+      },
+      "campaignBudgetAmount": {
+          "type": ["null", "string"]
+      },
+      "campaignBudgetType": {
+          "type": ["null", "string"]
+      },
+      "campaignBudgetCurrencyCode": {
+          "type": ["null", "string"]
+      },
+      "adGroupName": {
+          "type": ["null", "string"]
+      },
+      "adGroupId": {
+        "type": ["null", "string"]
+      },
+      "portfolioId": {
+        "type": ["null", "string"]
+      },
+      "keywordId": {
+        "type": ["null", "string"]
+      },
+      "keyword": {
+        "type": ["null", "string"]
+      },
+      "keywordType": {
+        "type": ["null", "string"]
+      },
+      "matchType": {
+        "type": ["null", "string"]
+      },
+      "targeting": {
+        "type": ["null", "string"]
+      }
+  }
+}

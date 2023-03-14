@@ -1,0 +1,65 @@
+{
+  "type": "object",
+  "properties": {
+    "profileId": {
+        "type": "integer"
+    },
+    "countryCode": {
+        "type": "string"
+    },
+    "name": {
+        "type": ["null", "string"]
+    },
+    "campaignId": {
+      "type": "string"
+    },
+    "portfolioId": {
+        "type": ["null", "string"]
+    },
+    "targetingType": {
+      "type": ["null", "string"]
+    },
+    "state": {
+      "type": ["null", "string"]
+    },
+    "dynamicBidding": {
+      "type": "object",
+      "properties": {
+        "placementBidding": {
+          "type": ["null", "array"],
+          "items": {
+            "type": ["null", "object"],
+            "properties": {
+              "percentage": {
+                "type": ["null", "number"]
+              },
+              "placement": {
+                "type": ["null", "string"]
+              }
+            }
+          }
+        },
+        "strategy": {
+          "type": ["null", "string"]
+        }
+      }
+    },
+    "startDate": {
+      "type": ["null", "string"]
+    },
+    "budget":{
+      "type": ["null", "object"],
+      "properties": {
+        "budgetType": {
+          "type": ["null", "string"]
+        },
+        "budget": {
+          "type": ["null", "number"]
+        },
+        "effectiveBudget": {
+          "type": ["null", "number"]
+        }
+      }
+    }
+  }
+}

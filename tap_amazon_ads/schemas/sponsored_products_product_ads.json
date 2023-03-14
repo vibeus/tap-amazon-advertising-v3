@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "properties": {
+    "profileId": {
+        "type": "integer"
+    },
+    "countryCode": {
+        "type": "string"
+    },
+    "name": {
+        "type": ["null", "string"]
+    },
+    "campaignId": {
+      "type": ["null", "string"]
+    },
+    "portfolioId": {
+        "type": ["null", "string"]
+    },
+    "keywordId": {
+      "type": ["null", "string"]
+    },
+    "keywordText": {
+      "type": ["null", "string"]
+    },
+    "nativeLanguageKeyword": {
+      "type": ["null", "string"]
+    },
+    "nativeLanguageLocale": {
+      "type": ["null", "string"]
+    },
+    "state": {
+      "type": ["null", "string"]
+    },
+    "bid": {
+      "type": ["null", "number"]
+    }
+  }
+}

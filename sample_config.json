@@ -1,0 +1,17 @@
+[
+  {
+    "client_id": "CLIENT_ID",
+    "client_secret": "LWA_CLIENT_SECRET",
+    "refresh_token": "REFRESH_TOKEN",
+    "redirect_uri": "URL",
+    "start_date": "2020-01-01",
+    "region": "NA",
+    "profiles": [{
+      "profile_id": "US_PROFILE_ID",
+      "country_code": "US"
+    }, {
+      "profile_id": "CA_PROFILE_ID",
+      "country_code": "CA"
+    }]
+  }
+]
