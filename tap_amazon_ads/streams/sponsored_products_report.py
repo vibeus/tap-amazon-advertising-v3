@@ -132,7 +132,7 @@ class SponsoredProductsReportPurchasedProduct(ReportBase):
 
     @property
     def key_properties(self):
-        return ["profileId", "campaignId", "adGroupId", "portfolioId", "keywordId", "date"]
+        return ["profileId", "campaignId", "adGroupId", "portfolioId", "keywordId", "date" "advertisedAsin", "purchasedAsin"]
 
     @property
     def metric_types(self):
@@ -166,6 +166,48 @@ class SponsoredProductsReportPurchasedProduct(ReportBase):
             "timeUnit": "DAILY",
             "format": "GZIP_JSON"
         }
+
+# Advertised product report:
+class SponsoredProductsReportAdvertisedProduct(ReportBase):
+    @property
+    def name(self):
+        return "sponsored_products_report_v3_advertised_product"
+
+    @property
+    def key_properties(self):
+        return ["profileId", "campaignId", "adGroupId", "portfolioId", "keywordId", "date", "advertisedAsin"]
+
+    @property
+    def metric_types(self):
+        return [
+            "purchases","purchasesSameSku", # v2: attributedConversions
+            "sales","attributedSalesSameSku", # v2: attributedSales
+            "unitsSoldClicks","unitsSoldSameSku" # v2: attributedUnitsOrdered
+        ]
+
+    def get_configuration(self):
+        return {
+            "adProduct": "SPONSORED_PRODUCTS",
+            "groupBy": ["advertiser"],
+            "columns": [
+                "date",
+                "campaignName",
+                "campaignId",
+                "campaignStatus",
+                "campaignBudgetAmount",
+                "campaignBudgetType",
+                "campaignBudgetCurrencyCode",
+                "adGroupName",
+                "adGroupId",
+                "portfolioId",
+                "advertisedAsin",
+                "advertisedSku",]
+                 + self.gen_metrics_names(self.metric_types),
+            "reportTypeId": "spAdvertisedProduct",
+            "timeUnit": "DAILY",
+            "format": "GZIP_JSON"
+        }
+
 
 # Targeting report
 # targeting in v2: keywordType in ("TARGETING_EXPRESSION", "TARGETING_EXPRESSION_PREDEFINED")

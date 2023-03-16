@@ -7,6 +7,7 @@ from .sponsored_products_report import \
                 SponsoredProductsReportAdGroups, \
                 SponsoredProductsReportSearchTerm, \
                 SponsoredProductsReportPurchasedProduct, \
+                SponsoredProductsReportAdvertisedProduct, \
                 SponsoredProductsReportTargeting
 
 
@@ -25,6 +26,8 @@ def create_stream(stream_id):
         return SponsoredProductsReportSearchTerm()
     if stream_id == "sponsored_products_report_v3_purchased_product":
         return SponsoredProductsReportPurchasedProduct()
+    if stream_id == "sponsored_products_report_v3_advertised_product":
+        return SponsoredProductsReportAdvertisedProduct()
     if stream_id == "sponsored_products_report_v3_targeting":
         return SponsoredProductsReportTargeting()
 

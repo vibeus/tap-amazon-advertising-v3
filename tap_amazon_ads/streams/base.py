@@ -219,7 +219,7 @@ class ReportBase(Base):
                                         json={"startDate": start.date().isoformat(), "endDate": end.date().isoformat(),
                                             "configuration": self.get_configuration()})
                 if resp.status_code != 200:
-                    LOGGER.warning(f"report_create request error: {resp.text}")
+                    LOGGER.warning(f"{self.name} create request error: {resp.text}")
                     counter += 1
                     continue
 
@@ -230,18 +230,18 @@ class ReportBase(Base):
                 for i in range(MAX_TRIES):
                     report_info = requests.get(url='{}/reporting/reports/{}'.format(api_base, resp.json()['reportId']), headers=headers)
                     if report_info.status_code != 200:
-                        LOGGER.warning(f"report_info request error: {report_info.text}")
+                        LOGGER.warning(f"{self.name} info request error: {report_info.text}")
                         continue
                     if report_info.json()["status"] == "COMPLETED":
                         doc = self.get_report_document(report_info.json()["url"])
-                        LOGGER.info(f"report from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']} is generated...")
+                        LOGGER.info(f"{self.name} from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']} is generated...")
                         break
                     if report_info.json()["status"] == "CANCELLED":
-                        LOGGER.warning(f"Report for {start.date().isoformat()} is cancelled...")
+                        LOGGER.warning(f"{self.name} from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']} is cancelled...")
                         break
                     else:
                         timeout = (i + 2) ** 2
-                        LOGGER.warning(f"Report is {report_info.json()['status']}. Waiting {timeout} seconds...")
+                        LOGGER.warning(f"report is {report_info.json()['status']}. Waiting {timeout} seconds...")
                         time.sleep(timeout)
                 if doc:
                     for row in doc:
