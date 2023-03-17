@@ -175,7 +175,7 @@ class SponsoredProductsReportAdvertisedProduct(ReportBase):
 
     @property
     def key_properties(self):
-        return ["profileId", "campaignId", "adGroupId", "portfolioId", "keywordId", "date", "advertisedAsin"]
+        return ["profileId", "campaignId", "adGroupId", "portfolioId", "date", "advertisedAsin"]
 
     @property
     def metric_types(self):
