@@ -9,7 +9,7 @@ from .sponsored_products_report import \
                 SponsoredProductsReportPurchasedProduct, \
                 SponsoredProductsReportAdvertisedProduct, \
                 SponsoredProductsReportTargeting
-
+from .dsp_report import DSPReport
 
 def create_stream(stream_id):
     if stream_id == "sponsored_products_campaigns":
@@ -30,5 +30,7 @@ def create_stream(stream_id):
         return SponsoredProductsReportAdvertisedProduct()
     if stream_id == "sponsored_products_report_v3_targeting":
         return SponsoredProductsReportTargeting()
+    if stream_id == "dsp_report":
+        return DSPReport()
 
     assert False, f"Unsupported stream: {stream_id}"

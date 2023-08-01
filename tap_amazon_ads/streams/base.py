@@ -15,7 +15,7 @@ import requests_oauthlib
 LOGGER = singer.get_logger()
 DEFAULT_BACKOFF_SECONDS = 60
 MAX_TRIES = 7
-LOOKBACK = 5
+LOOKBACK = 30
 
 # use BASE_URL[config['region']]
 BASE_URL = {
@@ -57,10 +57,6 @@ class Base:
         return "/"
 
     @property
-    def api_method(self):
-        return "POST"
-
-    @property
     def accept_type(self):
         return "application/json"
 
@@ -93,19 +89,26 @@ class Base:
 
         return tokens['access_token']
 
-    def get_tap_data(self, config, state):
-        base_headers = {
-            "Accept": self.accept_type,
-            "Content-Type": self.content_type,
-            "Amazon-Advertising-API-ClientId": config['client_id'],
-            "Authorization": "Bearer " + self.get_authorization(config),
-        }
-        self._backoff_seconds = config.get("rate_limit_backoff_seconds", DEFAULT_BACKOFF_SECONDS)
+    def get_tap_data(self, configs, state):
+        for config in configs:
+            if config.get("for_dsp", False):
+                LOGGER.info(f"Skipping: DSP reporting config")
+                continue
 
-        for profile in config["profiles"]:
-            headers = base_headers.copy()
-            headers["Amazon-Advertising-API-Scope"] = profile['profile_id']
-            yield from self.get_stream_data(profile, headers, BASE_URL[config['region']])
+            LOGGER.info(config)
+
+            base_headers = {
+                "Accept": self.accept_type,
+                "Content-Type": self.content_type,
+                "Amazon-Advertising-API-ClientId": config['client_id'],
+                "Authorization": "Bearer " + self.get_authorization(config),
+            }
+            self._backoff_seconds = config.get("rate_limit_backoff_seconds", DEFAULT_BACKOFF_SECONDS)
+
+            for profile in config["profiles"]:
+                headers = base_headers.copy()
+                headers["Amazon-Advertising-API-Scope"] = profile['profile_id']
+                yield from self.get_stream_data(profile, headers, BASE_URL[config['region']])
 
     def get_stream_data(self, profile, headers, api_base):
         LOGGER.info(f"start syncing {self.name} for {profile['country_code']}")
@@ -183,22 +186,27 @@ class ReportBase(Base):
         return json.loads(decoded)
 
 
-    def get_tap_data(self, config, state):
-        base_headers = {
-            "Content-Type": self.content_type,
-            "Amazon-Advertising-API-ClientId": config['client_id'],
-            "Authorization": "Bearer " + self.get_authorization(config),
-        }
+    def get_tap_data(self, configs, state):
+        for config in configs:
+            if config.get("for_dsp", False):
+                LOGGER.info(f"Skipping: DSP reporting config")
+                continue
 
-        today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
-        self._start_date = config.get("start_date", today) # config start date
-        self._backoff_seconds = config.get("rate_limit_backoff_seconds", DEFAULT_BACKOFF_SECONDS)
-        self._state = state.copy()
+            base_headers = {
+                "Content-Type": self.content_type,
+                "Amazon-Advertising-API-ClientId": config['client_id'],
+                "Authorization": "Bearer " + self.get_authorization(config),
+            }
 
-        for profile in config["profiles"]:
-            headers = base_headers.copy()
-            headers["Amazon-Advertising-API-Scope"] = profile['profile_id']
-            yield from self.get_stream_data(profile, headers, BASE_URL[config['region']])
+            today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+            self._start_date = config.get("start_date", today) # config start date
+            self._backoff_seconds = config.get("rate_limit_backoff_seconds", DEFAULT_BACKOFF_SECONDS)
+            self._state = state.copy()
+
+            for profile in config["profiles"]:
+                headers = base_headers.copy()
+                headers["Amazon-Advertising-API-Scope"] = profile['profile_id']
+                yield from self.get_stream_data(profile, headers, BASE_URL[config['region']])
 
     def get_stream_data(self, profile, headers, api_base):
         yesterday = datetime.utcnow() - timedelta(days=1)
@@ -261,3 +269,4 @@ class ReportBase(Base):
                 time.sleep(self._backoff_seconds)
 
         self._state[profile["country_code"]] = max_rep_key.isoformat()
+        LOGGER.info(f'{self.name}, {profile["country_code"]}, {max_rep_key.isoformat()}')

@@ -1,0 +1,371 @@
+{
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "accountId": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "advertiserId": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "advertiserName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "orderId": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "orderBudget": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "orderCurrency": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "orderExternalId": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "orderEndDate": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "orderStartDate": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "orderName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "lineItemName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "lineItemBudget": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "lineItemEndDate": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "lineItemId": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "lineItemExternalId": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "lineItemStartDate": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "creativeAdId": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "creativeName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "creativeSize": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "creativeID": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "creativeType": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "impressions": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "eCPM": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "viewableImpressions": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "measurableImpressions": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "measurableRate": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "viewabilityRate": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "clickThroughs": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "CTR": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "eCPC": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "eRPM14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "grossClickThroughs": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "grossImpressions": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "invalidClickThroughs": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "invalidImpressions": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "invalidClickThroughsRate": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "invalidImpressionRate": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "supplyCost": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "agencyFee": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "amazonAudienceFee": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "amazonPlatformFee": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalFee": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalCost": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalERPM14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "unitsSold14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "sales14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "purchases14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "newToBrandProductSales14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "newToBrandPurchaseRate14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "newToBrandPurchases14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalDetailPageClicks14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalDetailPageViews14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalDetailPageViewsCVR14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalDetailPageViewViews14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalNewToBrandPurchases14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalPurchases14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalPurchasesClicks14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalPurchasesViews14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalSales14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalUnitsSold14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    }
+  }
+}

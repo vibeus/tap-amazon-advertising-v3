@@ -16,7 +16,7 @@ from tap_amazon_ads.streams import create_stream
 REQUIRED_CONFIG_KEYS = ["client_id", "client_secret", "refresh_token", "redirect_uri", "start_date", "region", "profiles"]
 LOGGER = singer.get_logger()
 
-def parse_args_list(required_config_keys):
+def parse_args_multiconfigs(required_config_keys):
     '''Parse standard command-line args.
     Parses the command-line arguments mentioned in the SPEC and the
     BEST_PRACTICES documents:
@@ -53,38 +53,31 @@ def parse_args_list(required_config_keys):
         action='store_true',
         help='Do schema discovery')
 
-    parsed_args = parser.parse_args()
+    args = parser.parse_args()
 
-    if parsed_args.config:
-        setattr(parsed_args, 'config_path', parsed_args.config)
-        config_list = singer.utils.load_json(parsed_args.config)
-        if not isinstance(config_list, list):
+    if args.config:
+        setattr(args, 'config_path', args.config)
+        args.config = singer.utils.load_json(args.config)
+        if not isinstance(args.config, list):
             raise Exception("Config SHOULD be a LIST!")
 
-    args_list = []
-    for config in config_list:
+    if args.state:
+        setattr(args, 'state_path', args.state)
+        args.state = singer.utils.load_json(args.state)
+    else:
+        args.state = {}
+    if args.properties:
+        setattr(args, 'properties_path', args.properties)
+        args.properties = singer.utils.load_json(args.properties)
+    if args.catalog:
+        setattr(args, 'catalog_path', args.catalog)
+        args.catalog = Catalog.load(args.catalog)
+
+    for config in args.config:
         singer.utils.check_config(config, required_config_keys)
-        new_arg = Namespace(config=config)
 
-        if parsed_args.state:
-            setattr(parsed_args, 'state_path', parsed_args.state)
-            new_arg.state = singer.utils.load_json(parsed_args.state)
-        else:
-            new_arg.state = {}
-        if parsed_args.properties:
-            setattr(parsed_args, 'properties_path', parsed_args.properties)
-            new_arg.properties = singer.utils.load_json(parsed_args.properties)
-        if parsed_args.catalog:
-            setattr(parsed_args, 'catalog_path', parsed_args.catalog)
-            new_arg.catalog = Catalog.load(parsed_args.catalog)
-        else:
-            new_arg.catalog = parsed_args.catalog
+    return args
 
-        new_arg.discover = parsed_args.discover
-
-        args_list.append(new_arg)
-
-    return args_list
 
 def expand_env(config):
     assert isinstance(config, dict)
@@ -132,7 +125,7 @@ def discover():
     streams = []
     for stream_id, schema_dict in raw_schemas.items():
         stream = create_stream(stream_id)
-        if "report" in stream_id:
+        if "report" in stream_id and stream_id != 'dsp_report':
             for col in stream.gen_metrics_names(stream.metric_types):
                 schema_dict["properties"][col] = {
                     "type": ["null", "string"]
@@ -159,10 +152,8 @@ def discover():
     return Catalog(streams)
 
 
-def sync(config, state, catalog, global_state_dict):
+def sync(configs, state, catalog):
     """Sync data from tap source"""
-
-    # state_dict = {}
 
     for catalog_stream in catalog.get_selected_streams(state):
         stream_id = catalog_stream.tap_stream_id
@@ -178,43 +169,36 @@ def sync(config, state, catalog, global_state_dict):
         stream_state = state.get(stream_id, {})
 
         t = Transformer()
-        for row in stream.get_tap_data(config, stream_state):
+        for row in stream.get_tap_data(configs, stream_state):
             schema = catalog_stream.schema.to_dict()
             mdata = metadata.to_map(catalog_stream.metadata)
             record = t.transform(row, schema, mdata)
 
             singer.write_records(stream_id, [record])
 
-        if stream_id in global_state_dict:
-            global_state_dict[stream_id].update(stream.state)
-        else:
-            global_state_dict[stream_id] = stream.state
-        singer.write_state(global_state_dict)
+        state.update({stream_id: stream.state})
+        LOGGER.info(f'updated state: {state}')
+        singer.write_state(state)
 
 
 @utils.handle_top_exception(LOGGER)
 def main():
     # Parse command line arguments
-    args_list = parse_args_list(required_config_keys=REQUIRED_CONFIG_KEYS)
+    args = parse_args_multiconfigs(REQUIRED_CONFIG_KEYS)
 
-    global_state_dict = args_list[0].state
-    for args in args_list:
-        # If discover flag was passed, run discovery mode and dump output to stdout
-        if args.discover:
-            catalog = discover()
-            catalog.dump()
-            break
-        # Otherwise run in sync mode
+    # If discover flag was passed, run discovery mode and dump output to stdout
+    if args.discover:
+        catalog = discover()
+        catalog.dump()
+    # Otherwise run in sync mode
+    else:
+        if args.catalog:
+            catalog = args.catalog
         else:
-            if args.catalog:
-                catalog = args.catalog
-            else:
-                catalog = discover()
+            catalog = discover()
 
-            args.config = expand_env(args.config)
-            sync(args.config, args.state, catalog, global_state_dict)
-    # singer.write_state(global_state_dict)
-
+        args.config = [expand_env(config) for config in args.config]
+        sync(args.config, args.state, catalog)
 
 if __name__ == "__main__":
     main()
