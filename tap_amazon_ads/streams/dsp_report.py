@@ -180,14 +180,12 @@ class DSPReport(Base):
                         time.sleep(timeout)
                 if doc:
                     for row in doc:
-                        for col in ['date', 'orderStartDate', 'orderEndDate', 'lineItemStartDate', 'lineItemEndDate']:
-                            row[col] = datetime.fromtimestamp(int(row[col])/1000)
                         rep_key = row.get(self.replication_key)
-                        # if rep_key and rep_key > max_rep_key:
-                        #     max_rep_key = rep_key
+                        for col in ['date', 'orderStartDate', 'orderEndDate', 'lineItemStartDate', 'lineItemEndDate']:
+                            row[col] = datetime.fromtimestamp(int(row[col])/1000).isoformat()
 
-                        if rep_key and rep_key > max_rep_key:
-                            max_rep_key = rep_key
+                        if rep_key and datetime.fromtimestamp(int(rep_key)/1000) > max_rep_key:
+                            max_rep_key = datetime.fromtimestamp(int(rep_key)/1000)
 
                         row["accountId"] = profile["account_id"]
                         row["countryCode"] = profile["country_code"]
