@@ -187,6 +187,11 @@ class ReportBase(Base):
 
 
     def get_tap_data(self, configs, state):
+        today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+        self._start_date = config.get("start_date", today) # config start date
+        self._backoff_seconds = config.get("rate_limit_backoff_seconds", DEFAULT_BACKOFF_SECONDS)
+        self._state = state.copy()
+
         for config in configs:
             if config.get("for_dsp", False):
                 LOGGER.info(f"Skipping: DSP reporting config")
@@ -197,11 +202,6 @@ class ReportBase(Base):
                 "Amazon-Advertising-API-ClientId": config['client_id'],
                 "Authorization": "Bearer " + self.get_authorization(config),
             }
-
-            today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
-            self._start_date = config.get("start_date", today) # config start date
-            self._backoff_seconds = config.get("rate_limit_backoff_seconds", DEFAULT_BACKOFF_SECONDS)
-            self._state = state.copy()
 
             for profile in config["profiles"]:
                 headers = base_headers.copy()
