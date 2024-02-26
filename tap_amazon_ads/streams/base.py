@@ -262,7 +262,8 @@ class ReportBase(Base):
 
         max_rep_key = start
         counter = 0
-        while start < yesterday and counter < MAX_TRIES:
+        skipFlag = False
+        while start < yesterday and counter < MAX_TRIES and not skipFlag:
             try:
                 LOGGER.info(f"start snycing {self.name} from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']}")
                 # Create a report
@@ -297,6 +298,10 @@ class ReportBase(Base):
                             timeout = (i + 2) ** 2
                             LOGGER.warning(f"report is {report_info.json()['status']}. Waiting {timeout} seconds...")
                             time.sleep(timeout)
+
+                        if i == MAX_TRIES - 1 and report_info.json()["status"] != "COMPLETED":
+                            LOGGER.warning(f"skipping {self.name} due to waiting too long...")
+                            skipFlag = True
 
                 if doc:
                     for row in doc:
