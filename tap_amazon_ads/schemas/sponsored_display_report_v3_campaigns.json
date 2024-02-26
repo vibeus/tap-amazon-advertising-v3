@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "properties": {
+        "profileId": {
+            "type": "integer"
+        },
+        "countryCode": {
+            "type": "string"
+        },
+        "date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "campaignName": {
+            "type": ["null", "string"]
+        },
+        "campaignId": {
+            "type": ["null", "string"]
+        },
+        "campaignStatus": {
+            "type": ["null", "string"]
+        },
+        "campaignBudgetAmount": {
+            "type": ["null", "string"]
+        },
+        "campaignBudgetCurrencyCode": {
+            "type": ["null", "string"]
+        },
+        "matchedTargetAsin": {
+            "type": ["null", "string"]
+        }
+  }
+}

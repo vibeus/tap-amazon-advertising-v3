@@ -18,11 +18,11 @@ BASE_URL = {
 TOKEN_URL = 'https://api.amazon.com/auth/o2/token'
 SCOPES = ["advertising::campaign_management"]
 
-class SponsoredBrandsCampaigns(Base):
+class SponsoredDisplayCampaigns(Base):
 
     @property
     def name(self):
-        return "sponsored_brands_campaigns_v3"
+        return "sponsored_display_campaigns_v3"
 
     @property
     def key_properties(self):
@@ -30,26 +30,22 @@ class SponsoredBrandsCampaigns(Base):
 
     @property
     def api_path(self):
-        return "/sb/v4/campaigns/list"
-
-    @property
-    def accept_type(self):
-        return "application/vnd.sbcampaignresource.v4+json"
+        return "/sd/campaigns"
 
     @property
     def content_type(self):
-        return "text/plain"
+        return "application/json"
 
     @property
-    def list_name(self):
-        return "campaigns"
+    def request_method(self):
+        return 'GET'
 
 
-class SponsoredBrandsAdGroups(Base):
+class SponsoredDisplayAdGroups(Base):
 
     @property
     def name(self):
-        return "sponsored_brands_ad_groups_v3"
+        return "sponsored_display_ad_groups_v3"
 
     @property
     def key_properties(self):
@@ -58,17 +54,14 @@ class SponsoredBrandsAdGroups(Base):
 
     @property
     def api_path(self):
-        return "/sb/v4/adGroups/list"
+        return "/sd/adGroups"
 
-    @property
-    def accept_type(self):
-        return "application/vnd.sbadgroupresource.v4+json"
 
     @property
     def content_type(self):
-        return "text/plain"
+        return "application/json"
 
     @property
-    def list_name(self):
-        return "adGroups"
+    def request_method(self):
+        return 'GET'
 

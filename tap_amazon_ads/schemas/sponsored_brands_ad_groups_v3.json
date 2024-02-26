@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "profileId": {
+        "type": "integer"
+    },
+    "countryCode": {
+        "type": "string"
+    },
+    "name": {
+        "type": ["null", "string"]
+    },
+    "campaignId": {
+      "type": "string"
+    },
+    "adGroupId": {
+      "type": "string"
+    },
+    "portfolioId": {
+        "type": ["null", "string"]
+    },
+    "state": {
+      "type": ["null", "string"]
+    }
+  }
+}

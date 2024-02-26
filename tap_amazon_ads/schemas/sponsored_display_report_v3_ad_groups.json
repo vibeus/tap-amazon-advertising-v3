@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+        "profileId": {
+            "type": "integer"
+        },
+        "countryCode": {
+            "type": "string"
+        },
+        "date": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "campaignName": {
+            "type": ["null", "string"]
+        },
+        "campaignId": {
+            "type": ["null", "string"]
+        },
+        "adGroupName": {
+            "type": ["null", "string"]
+        },
+        "adGroupId": {
+            "type": ["null", "string"]
+        },
+        "matchedTargetAsin": {
+            "type": ["null", "string"]
+        }
+  }
+}

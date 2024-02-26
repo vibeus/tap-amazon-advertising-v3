@@ -126,7 +126,7 @@ def discover():
     for stream_id, schema_dict in raw_schemas.items():
         stream = create_stream(stream_id)
         if "report" in stream_id and stream_id != 'dsp_report':
-            for col in stream.gen_metrics_names(stream.metric_types):
+            for col in stream.gen_metrics_names(stream.metric_types, conversion_window=stream.conversion_window):
                 schema_dict["properties"][col] = {
                     "type": ["null", "string"]
                 }

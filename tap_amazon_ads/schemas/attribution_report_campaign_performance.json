@@ -1,0 +1,103 @@
+{
+  "type": "object",
+  "properties": {
+    "profileId": {
+      "description": "The ID of the profile",
+      "type": "integer"
+    },
+    "countryCode": {
+        "description": "The country code of the profile",
+        "type": "string"
+    },
+    "date": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "campaignId": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "advertiserName": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "Click-throughs": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "attributedDetailPageViewsClicks14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "attributedAddToCartClicks14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "attributedPurchases14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "unitsSold14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "attributedSales14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "attributedTotalDetailPageViewsClicks14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "attributedTotalAddToCartClicks14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "attributedTotalPurchases14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalUnitsSold14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "totalAttributedSales14d": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "brb_bonus_amount": {
+      "type": [
+        "null",
+        "number"
+      ]
+    }
+  }
+}

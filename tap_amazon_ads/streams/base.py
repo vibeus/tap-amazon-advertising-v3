@@ -58,11 +58,19 @@ class Base:
 
     @property
     def accept_type(self):
-        return "application/json"
+        return None
 
     @property
     def content_type(self):
         return "application/json"
+
+    @property
+    def list_name(self):
+        return None
+
+    @property
+    def request_method(self):
+        return 'POST'
 
     def get_metadata(self, schema):
         mdata = metadata.get_standard_metadata(
@@ -95,14 +103,15 @@ class Base:
                 LOGGER.info(f"Skipping: DSP reporting config")
                 continue
 
-            LOGGER.info(config)
-
             base_headers = {
-                "Accept": self.accept_type,
                 "Content-Type": self.content_type,
                 "Amazon-Advertising-API-ClientId": config['client_id'],
                 "Authorization": "Bearer " + self.get_authorization(config),
             }
+
+            if self.accept_type:
+                base_headers.update({"Accept": self.accept_type})
+
             self._backoff_seconds = config.get("rate_limit_backoff_seconds", DEFAULT_BACKOFF_SECONDS)
 
             for profile in config["profiles"]:
@@ -117,9 +126,9 @@ class Base:
         while True and counter < MAX_TRIES:
             try:
                 if not next_token:
-                    resp = requests.post(url=f"{api_base}{self.api_path}", headers=headers)
+                    resp = requests.request(method=self.request_method, url=f"{api_base}{self.api_path}", headers=headers)
                 else:
-                    resp = requests.post(url=f"{api_base}{self.api_path}", headers=headers,
+                    resp = requests.request(method=self.request_method,url=f"{api_base}{self.api_path}", headers=headers,
                                             json={"nextToken": next_token})
 
                 if resp.status_code != 200:
@@ -129,7 +138,12 @@ class Base:
 
                 resp = resp.json()
                 counter = 0
-                for row in resp[self.list_name]:
+                if self.list_name and type(resp) != list:
+                    list_res = resp[self.list_name]
+                else:
+                    list_res = resp
+
+                for row in list_res:
                     row["profileId"] = profile["profile_id"]
                     row["countryCode"] = profile["country_code"]
                     yield row
@@ -169,15 +183,39 @@ class ReportBase(Base):
     def metric_types(self):
         return []
 
+    @property
+    def conversion_window(self):
+        return [1, 7, 14, 30]
+
+    def get_data_retention(self):
+        if 'sponsored_products' in self.name:
+            return 95
+        if 'sponsored_brands' in self.name:
+            return 60
+        if 'sponsored_display' in self.name:
+            return 65
+        if 'attribution_report' in self.name:
+            return 365
+
     def gen_metrics_names(self, metric_types=[], conversion_window=[1, 7, 14, 30], base=["impressions","clicks","cost"]):
         cols = base.copy()
         for metric_type in metric_types:
-            for window in conversion_window:
-                cols += [f"{metric_type}{window}d"]
+            if conversion_window:
+                for window in conversion_window:
+                    cols += [f"{metric_type}{window}d"]
+            else:
+                cols += [metric_type]
         return cols
 
     def get_configuration(self):
         return {}
+
+    def get_body(self, start, end):
+        return {
+            "startDate": start.date().isoformat(),
+            "endDate": end.date().isoformat(),
+            "configuration": self.get_configuration()
+        }
 
     def get_report_document(self, report_url):
         document = requests.get(url=report_url).content
@@ -185,6 +223,8 @@ class ReportBase(Base):
         decoded = extracted.decode('utf-8')
         return json.loads(decoded)
 
+    def transform_date_format(self, date):
+        return date
 
     def get_tap_data(self, configs, state):
         today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
@@ -212,7 +252,8 @@ class ReportBase(Base):
 
     def get_stream_data(self, profile, headers, api_base):
         yesterday = datetime.utcnow() - timedelta(days=1)
-        WINDOW_start = datetime.utcnow() - timedelta(days=95)
+
+        WINDOW_start = datetime.utcnow() - timedelta(days=self.get_data_retention())
 
         state_date = self._state.get(profile['country_code'], self._start_date) # state start date
 
@@ -225,9 +266,10 @@ class ReportBase(Base):
             try:
                 LOGGER.info(f"start snycing {self.name} from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']}")
                 # Create a report
+                body = {"startDate": start.date().isoformat(), "endDate": end.date().isoformat(),
+                                            "configuration": self.get_configuration()}
                 resp = requests.post(url=f"{api_base}{self.api_path}", headers=headers,
-                                        json={"startDate": start.date().isoformat(), "endDate": end.date().isoformat(),
-                                            "configuration": self.get_configuration()})
+                                        json=self.get_body(start, end))
                 if resp.status_code != 200:
                     LOGGER.warning(f"{self.name} create request error: {resp.text}")
                     counter += 1
@@ -236,23 +278,26 @@ class ReportBase(Base):
                 time.sleep(15) # wait 15 second for report processing
 
                 counter = 0
-                doc = None
-                for i in range(MAX_TRIES):
-                    report_info = requests.get(url='{}/reporting/reports/{}'.format(api_base, resp.json()['reportId']), headers=headers)
-                    if report_info.status_code != 200:
-                        LOGGER.warning(f"{self.name} info request error: {report_info.text}")
-                        continue
-                    if report_info.json()["status"] == "COMPLETED":
-                        doc = self.get_report_document(report_info.json()["url"])
-                        LOGGER.info(f"{self.name} from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']} is generated...")
-                        break
-                    if report_info.json()["status"] == "CANCELLED":
-                        LOGGER.warning(f"{self.name} from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']} is cancelled...")
-                        break
-                    else:
-                        timeout = (i + 2) ** 2
-                        LOGGER.warning(f"report is {report_info.json()['status']}. Waiting {timeout} seconds...")
-                        time.sleep(timeout)
+                doc = resp.json().get("reports", None)
+
+                if not doc:
+                    for i in range(MAX_TRIES):
+                        report_info = requests.get(url='{}/reporting/reports/{}'.format(api_base, resp.json()['reportId']), headers=headers)
+                        if report_info.status_code != 200:
+                            LOGGER.warning(f"{self.name} info request error: {report_info.text}")
+                            continue
+                        if report_info.json()["status"] == "COMPLETED":
+                            doc = self.get_report_document(report_info.json()["url"])
+                            LOGGER.info(f"{self.name} from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']} is generated...")
+                            break
+                        if report_info.json()["status"] == "CANCELLED":
+                            LOGGER.warning(f"{self.name} from {start.date().isoformat()} to {end.date().isoformat()} for {profile['country_code']} is cancelled...")
+                            break
+                        else:
+                            timeout = (i + 2) ** 2
+                            LOGGER.warning(f"report is {report_info.json()['status']}. Waiting {timeout} seconds...")
+                            time.sleep(timeout)
+
                 if doc:
                     for row in doc:
                         rep_key = row.get(self.replication_key)
@@ -261,6 +306,7 @@ class ReportBase(Base):
 
                         row["profileId"] = profile["profile_id"]
                         row["countryCode"] = profile["country_code"]
+                        row['date'] = self.transform_date_format(row['date'])
                         yield row
 
                 start = end + timedelta(days=1)

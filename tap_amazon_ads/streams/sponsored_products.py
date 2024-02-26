@@ -11,7 +11,7 @@ LOGGER = singer.get_logger()
 class SponsoredProductsCampaigns(Base):
     @property
     def name(self):
-        return "sponsored_products_campaigns"
+        return "sponsored_products_campaigns_v3"
 
     @property
     def key_properties(self):
@@ -37,7 +37,7 @@ class SponsoredProductsCampaigns(Base):
 class SponsoredProductsAdGroups(Base):
     @property
     def name(self):
-        return "sponsored_products_ad_groups"
+        return "sponsored_products_ad_groups_v3"
 
     @property
     def key_properties(self):

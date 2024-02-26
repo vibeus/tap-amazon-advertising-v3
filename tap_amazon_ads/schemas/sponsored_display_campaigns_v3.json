@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "properties": {
+    "profileId": {
+        "type": "integer"
+    },
+    "countryCode": {
+        "type": "string"
+    },
+    "name": {
+        "type": ["null", "string"]
+    },
+    "campaignId": {
+      "type": "string"
+    },
+    "portfolioId": {
+        "type": ["null", "string"]
+    },
+    "budgetType": {
+      "type": ["null", "string"]
+    },
+    "budget": {
+      "type": ["null", "number"]
+    },
+    "state": {
+      "type": ["null", "string"]
+    },
+    "startDate": {
+      "type": ["null", "string"]
+    },
+    "endDate": {
+      "type": ["null", "string"]
+    },
+    "costType": {
+      "type": ["null", "string"]
+    },
+    "tactic": {
+      "type": ["null", "string"]
+    },
+    "deliveryProfile": {
+      "type": ["null", "string"]
+    },
+    "ruleBasedBudget": {
+      "type": "object",
+      "properties": {
+        "isProcessing": {
+          "type": ["null", "boolean"]
+        },
+        "applicableRuleName": {
+          "type": ["null", "string"]
+        },
+        "value": {
+          "type": ["null", "number"]
+        },
+        "applicableRuleId": {
+          "type": ["null", "string"]
+        }
+      }
+    }
+  }
+}
