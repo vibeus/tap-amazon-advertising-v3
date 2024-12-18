@@ -275,8 +275,10 @@ class ReportBase(Base):
                     LOGGER.warning(f"{self.name} create request error: {resp.text}")
                     counter += 1
                     continue
-
-                time.sleep(15) # wait 15 second for report processing
+                if self.name == "sponsored_products_report_v3_campaigns":
+                    time.sleep(3599)
+                else:
+                    time.sleep(15) # wait 15 second for report processing
 
                 counter = 0
                 doc = resp.json().get("reports", None)
